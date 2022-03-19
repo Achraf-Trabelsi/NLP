@@ -16,5 +16,45 @@
 #1)load the text
 with open('frank.txt') as f:
     text = f.read()
-    print(text)
+    #print(text)
 #2) text preprocessing
+from nltk.tokenize import word_tokenize
+from collections import Counter
+
+text=text.lower()
+my_text=[i for i in word_tokenize(text) if i.isalpha() and i not in [".",",",";","!","?"]]
+#print((my_text[:5]))
+#print(my_text.index("ever-moving"))
+single_word=set(my_text)
+print(len(single_word))
+word_freq=Counter(my_text)
+#print(word_freq)
+
+import random as r
+def find_index(l,w):
+    indices = [i+1 for i, x in enumerate(l) if x == w]
+    return indices
+mapping={}
+for i in single_word: 
+  indice=find_index(my_text,i)
+  mapping[i]=indice
+
+def markov(i,x,s,t=i):
+    if x>=0:
+     next_w=s[r.choice(mapping.get(i))]
+     t+=" "+(next_w)
+     markov(next_w,x-1,s,t)
+    else:
+        print(t)
+initial_w=input("what's the first word? ")
+nbr_lines=int(input("how many lines?  "))
+markov(initial_w,nbr_lines,my_text,initial_w)
+
+
+# import json
+# # Serializing json 
+# json_object = json.dumps(mapping, indent = 4)
+  
+# # Writing to sample.json
+# with open("markov_chain.json", "w") as outfile:
+#     outfile.write(json_object)
